@@ -6,9 +6,10 @@ Basic_Interface = """\n\n =====================================
     1. Add Student
     2. View Student
     3. Search Student
-    4. Update Student
-    5. Delete Student
-    6. Exit
+    4. Check Class List
+    5. Update Student
+    6. Delete Student
+    7. Exit
 =====================================
 """
 
@@ -22,6 +23,10 @@ View_student = """\n=====================================
 
 Search_student = """\n=====================================
     SEARCH STUDENT BY NAME
+====================================="""
+
+Class_List = """\n=====================================
+    CHECK CLASS LIST
 ====================================="""
 
 Update_student = """\n=====================================
@@ -69,6 +74,27 @@ def student_management(csv_path:str):
                 print("Found Record:", dictionary, end="\n\t")
             else:
                 print("No Records Found!")
+
+    def class_list(Class:int, section:str):
+        with open(csv_path, 'r') as csv_file2:
+            reader2 = csv.reader(csv_file2)
+            retrieved = []
+            reader_list = list(reader2)
+            columns = reader_list[0]
+            columns[0] = 'Roll No'  # Random Characters Error
+
+            for row in reader_list:
+                if row and row[2] == str(Class) and row[3] == section:
+                    retrieved.append(int(list(row)[0]))
+
+            print(f"Found Records({len(retrieved)}):\n\t", end='')
+            dictionary = {}
+            for x in retrieved:
+                for i in range(len(columns)):
+                    dictionary[columns[i]] = reader_list[x][i]
+
+                print(dictionary, end="\n\t")
+
 
     def search_student(name:str):
         with open(csv_path, 'r') as csv_file2:
@@ -153,21 +179,29 @@ def student_management(csv_path:str):
 
             add_student(roll_no, name, Class, section, number)
             view_student(roll_no)
-            Continue = input("Press any key to continue...")
+            Continue = input("Press Enter key to continue...")
 
         elif choice == "2":
             print(View_student)
             roll_no = int(input("Enter Student Roll No: "))
             view_student(roll_no)
-            Continue = input("Press any key to continue...")
+            Continue = input("Press Enter key to continue...")
 
         elif choice == "3":
             print(Search_student)
             name = input("Enter Student Name: ")
             search_student(name)
-            Continue = input("Press any key to continue...")
+            Continue = input("Press Enter key to continue...")
 
         elif choice == "4":
+            print(Class_List)
+            Class = int(input("Enter Class: "))
+            section = input("Enter Section: ")
+
+            class_list(Class, section)
+            Continue = input("Press Enter key to continue...")
+
+        elif choice == "5":
             print(Update_student)
 
             roll_no = int(input("Enter Student Roll No: "))
@@ -177,23 +211,24 @@ def student_management(csv_path:str):
             number = int(input("Enter Parent's Number: "))
 
             update_student(roll_no, name, Class, section, number)
-            Continue = input("\nPress any key to continue...")
+            Continue = input("\nPress Enter key to continue...")
 
-        elif choice == "5":
+        elif choice == "6":
             print(Delete_student)
 
             roll_no = int(input("Enter Student Roll No: "))
 
             delete_student(roll_no)
-            Continue = input("\nPress any key to continue...")
+            Continue = input("\nPress Enter key to continue...")
 
-        elif choice == "6":
+        elif choice == "7":
             run = False
             print("Thank you for using this program!")
-            Continue = input("Press any key to continue...")
+            Continue = input("Press Enter key to continue...")
             continue
-
-
-
+        
+        else:
+            print("Invalid Choice!!")
+            Continue = input("Press Enter key to continue...")
 
 student_management("..\\Spreadsheets\\Students.csv")
